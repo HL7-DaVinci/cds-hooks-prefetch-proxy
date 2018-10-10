@@ -1,0 +1,12 @@
+{
+  "port": 32100,
+
+  "endpoints": {
+    "dme_crd_r4": {
+      "url": "http://localhost:8090/r4/"
+    },
+    "dme_crd_stu3": {
+      "url": "http://localhost:8090/stu3/"
+    }
+  }
+}
