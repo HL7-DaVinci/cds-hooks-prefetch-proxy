@@ -1,10 +1,12 @@
 const express = require("express");
+const cors = require("cors");
 const axios = require("axios");
 const hydratePrefetchQuery = require("./lib/hydratePrefetchQuery");
 const EndpointManager = require("./lib/endpointManager");
 const SETTINGS = require("./config/settings.json");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 const endpointManager = new EndpointManager(SETTINGS.endpoints);
 //fetch service information for each service
