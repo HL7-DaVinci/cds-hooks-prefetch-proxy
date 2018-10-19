@@ -1,0 +1,45 @@
+{
+  "hook": "order-review",
+  "hookInstance": "ff939efe-1c97-4c2a-b4e5-d34e6edc2f7b",
+  "fhirServer": "http://localhost:8080/ehr-server/r4/",
+  "fhirAuthorization": null,
+  "user": "Practitioner/1234",
+  "context": {
+    "patientId": "c2f0f972-5f84-4518-948f-63d00a1fa5a0",
+    "encounterId": null,
+    "services": null,
+    "orders": {
+      "resourceType": "Bundle",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "DeviceRequest",
+            "id": "devreq1234",
+            "status": "draft",
+            "codeCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.ama-assn.org/go/cpt",
+                  "code": "94660"
+                }
+              ],
+              "text": "CPAP"
+            },
+            "subject": {
+              "reference": "Patient/pat1234"
+            },
+            "authoredOn": "2018-08-08",
+            "insurance": [
+              {
+                "reference": "Coverage/cov1234"
+              }
+            ],
+            "performer": {
+              "reference": "PractitionerRole/prarol1234"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
