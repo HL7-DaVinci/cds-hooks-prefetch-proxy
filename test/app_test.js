@@ -5,9 +5,12 @@ const fs = require("fs");
 
 const EndpointManager = require("../lib/endpointManager");
 const SETTINGS = require("../config/settings.json");
-const endpointManager = new EndpointManager(SETTINGS.endpoints);
-const proxy = require("../lib/proxy")(endpointManager);
+const proxyMaker = require("../lib/proxy");
 const hydratePrefetchQuery = require("../lib/hydratePrefetchQuery");
+
+function getNewProxy() {
+  return proxyMaker(new EndpointManager(SETTINGS.endpoints));
+}
 
 playbackOnly = true;
 setup_vcr(playbackOnly, "http://localhost:8090", "http://localhost:8080");
@@ -27,10 +30,10 @@ describe("hydrate prefetch", function() {
   });
 });
 
-describe("GET /dme_crd_stu3/cds-services", function() {
+describe("GET /dme_crd_r4/cds-services", function() {
   it("respond with cds-services json", function(done) {
-    request(proxy)
-      .get("/dme_crd_stu3/cds-services")
+    request(getNewProxy())
+      .get("/dme_crd_r4/cds-services")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)
@@ -45,7 +48,7 @@ describe("POST /dme_crd_r4/cds-services/order-review-crd", function() {
   it("respond with a message indicating a rule is required", function(done) {
     const req = loadFixture("request1_needsPrefetch.json");
     const res = loadFixture("request1_response.json");
-    request(proxy)
+    request(getNewProxy())
       .post("/dme_crd_r4/cds-services/order-review-crd")
       .send(req)
       .set("Accept", "application/json")
@@ -55,5 +58,45 @@ describe("POST /dme_crd_r4/cds-services/order-review-crd", function() {
         assert.deepStrictEqual(response.body, res);
         done();
       });
+  });
+});
+
+describe("GET /bad_endpoint/cds-services", function() {
+  it("respond with 404", function(done) {
+    request(getNewProxy())
+      .get("/bad_endpoint/cds-services")
+      .set("Accept", "application/json")
+      .expect(404, done);
+  });
+});
+
+describe("POST /dme_crd_r4/cds-services/bad_service", function() {
+  it("respond with 404", function(done) {
+    const req = loadFixture("request1_needsPrefetch.json");
+    request(getNewProxy())
+      .post("/dme_crd_r4/cds-services/bad_service")
+      .send(req)
+      .set("Accept", "application/json")
+      .expect(404, done);
+  });
+});
+
+describe("POST /dme_crd_r4/cds-services/order-review-crd with bad JSON", function() {
+  it("respond with a 400", function(done) {
+    request(getNewProxy())
+      .post("/dme_crd_r4/cds-services/order-review-crd")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .send("abc")
+      .expect(400, done);
+  });
+});
+
+describe("GET /dme_crd_stu3/cds-services when authorization required but not provided", function() {
+  it("respond with 403", function(done) {
+    request(getNewProxy())
+      .get("/dme_crd_stu3/cds-services")
+      .set("Accept", "application/json")
+      .expect(403, done);
   });
 });
