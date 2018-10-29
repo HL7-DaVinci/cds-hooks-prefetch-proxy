@@ -19,7 +19,7 @@ module.exports = function (req, res) {
   res.setHeader("x-frame-options", "DENY");
   res.setHeader("content-type", "application/json;charset=UTF-8");
   res.setHeader("transfer-encoding", "chunked");
-  res.setHeader("date", "Mon, 29 Oct 2018 11:16:05 GMT");
+  res.setHeader("date", "Mon, 29 Oct 2018 12:22:03 GMT");
   res.setHeader("connection", "close");
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
