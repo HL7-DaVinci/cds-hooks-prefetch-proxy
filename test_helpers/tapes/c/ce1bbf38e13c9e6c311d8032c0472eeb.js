@@ -3,7 +3,9 @@ var path = require("path");
 /**
  * POST /r4/cds-services/order-review-crd
  *
+ * accept: application/json, text/plain, * / *
  * content-type: application/json;charset=utf-8
+ * forwarded: for=::ffff:127.0.0.1
  * user-agent: axios/0.19.0-beta.1
  * content-length: 3471
  * host: localhost:8090
@@ -21,7 +23,7 @@ module.exports = function (req, res) {
   res.setHeader("x-frame-options", "DENY");
   res.setHeader("content-type", "application/json;charset=UTF-8");
   res.setHeader("transfer-encoding", "chunked");
-  res.setHeader("date", "Mon, 29 Oct 2018 12:22:10 GMT");
+  res.setHeader("date", "Tue, 30 Oct 2018 15:03:59 GMT");
   res.setHeader("connection", "close");
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));

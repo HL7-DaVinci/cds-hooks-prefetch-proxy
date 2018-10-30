@@ -4,13 +4,13 @@
   "endpoints": {
     "dme_crd_r4": {
       "url": "http://localhost:8090/r4/",
-      "services_cache_time": 0,
-      "forward_headers": false
+      "services_cache_time": 120,
+      "forward_headers": true
     },
     "dme_crd_stu3": {
       "url": "http://localhost:8090/stu3/",
       "services_cache_time": 0,
-      "forward_headers": false
+      "forward_headers": true
     }
   }
 }
