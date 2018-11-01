@@ -4,17 +4,16 @@ const yakbak = require("yakbak");
 
 const YAK_PORT = 44659; // if this is changed, for some reason everything needs to be re-recorded
 
-module.exports = function(noRecord, ...servers_to_yak) {
+module.exports = function(name, noRecord, ...servers_to_yak) {
   // use yakbak to replace the servers with proxies that record and playback http requests
   const server_to_idx = {};
   const yaks = [];
   servers_to_yak.forEach(function(server, i) {
-    yaks.push(yakbak(server, { dirname: __dirname + "/tapes", noRecord: noRecord }));
+    yaks.push(yakbak(server, { dirname: __dirname + "/tapes/" + name, noRecord: noRecord }));
     server_to_idx[server] = i;
-    console.log("yakking " + server);
   });
 
-  express()
+  const vcr_server = express()
     .use(function(req, res) {
       const id = req.path.substring(1, req.path.indexOf("/", 1));
       req.url = req.url.substr(1 + id.length);
@@ -34,5 +33,12 @@ module.exports = function(noRecord, ...servers_to_yak) {
       options.path = "/" + idx + options.path;
     }
     return http_request(options, callback);
+  };
+
+  return {
+    stop: function() {
+      vcr_server.close();
+      http.request = http_request; // undo monkey patch of http.request
+    }
   };
 };
